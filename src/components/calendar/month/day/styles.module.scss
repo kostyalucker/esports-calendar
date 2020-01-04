@@ -1,0 +1,23 @@
+@import "~assets/styles/mixins.scss";
+
+.day {
+  box-sizing: border-box;
+  position: relative;
+  padding: 50px 20px;
+
+  @include xl {
+    flex: 0 0 14.28%;
+  }
+  @include lg {
+    flex: 0 0 25%;
+  }
+  @include md {
+    flex: 0 0 33.33%;
+  }
+  @include sm {
+    flex: 0 0 50%;
+  }
+  @include xs {
+    flex: 0 0 100%;
+  }
+}
