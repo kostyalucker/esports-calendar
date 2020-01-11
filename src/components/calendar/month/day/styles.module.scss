@@ -4,6 +4,11 @@
   box-sizing: border-box;
   position: relative;
   padding: 50px 20px;
+  box-shadow: inset 5px 9px 17px -11px #f1f1f1;
+  background-color: #fff;
+  &:last-child {
+    border-right: 0.5px solid;
+  }
 
   @include xl {
     flex: 0 0 14.28%;
