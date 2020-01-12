@@ -1,6 +1,6 @@
 import moment from 'moment';
 
-const MONTHS_OFFSET = 48;
+const MONTHS_OFFSET = 96;
 
 const getMonthDays = (date: any) => {
   const startDate = date
@@ -40,7 +40,9 @@ export const getCalendar = (date: any) => {
     i += 1;
 
     result[i] = {
+      isToday: moment().isSame(startClone, 'month') && moment().isSame(startClone, 'year'),
       name: startClone.format('MMMM'),
+      year: startClone.format('YYYY'),
       days: getMonthDays(startClone),
     };
 

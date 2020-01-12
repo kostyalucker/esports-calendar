@@ -1,12 +1,9 @@
 import React from "react";
-import {
-  List,
-  AutoSizer,
-  WindowScroller,
-  InfiniteLoader
-} from "react-virtualized";
+import VirtualList from "react-tiny-virtual-list";
+// import InfiniteLoader from "react-window-infinite-loader";
 import Month from "./month";
 import { getCalendar } from "../../utils";
+import styles from "./styles.module.scss";
 
 interface PropsRow {
   key?: any;
@@ -14,7 +11,8 @@ interface PropsRow {
 }
 
 const MonthsList = (props: any) => {
-  const [scrollToIndex, setScrollIndex] = React.useState(3);
+  const [scrollToIndex, setScrollIndex] = React.useState(0);
+  const [todayIndex, setScrollTodayIndex] = React.useState(0);
   const { months } = props;
   let arr: any = [];
 
@@ -22,116 +20,60 @@ const MonthsList = (props: any) => {
     arr.push(months[el]);
   });
 
-
   React.useEffect(() => {
-    console.log(props)
-  })
-
-  function rowRenderer({ key, index, style, isScrolling, isVisible }: any) {
-    if (isScrolling && !isVisible) {
-      return (
-        <p key={key} style={style}>
-          ...Loading
-        </p>
-      );
-    }
-    // @ts-ignore
-    console.log("update");
-    return (
-      <div key={key} style={style}>
-        <p>
-          {arr[index].name}
-          {index}
-        </p>
-        <Month month={arr[index].days}></Month>
-      </div>
-    );
-  }
-
-  function isRowLoaded({ index }: { index: number }) {
-    return !!months[index];
-  }
-
-  function handleloadMoreRows({
-    startIndex,
-    stopIndex
-  }: {
-    startIndex: number;
-    stopIndex: number;
-  }) {
-    console.log("load more", startIndex, stopIndex);
-    return new Promise(resolve => {
-      return resolve();
+    arr.find((el: any, index: number) => {
+      if (el.isToday) {
+        setScrollIndex(index);
+        setScrollTodayIndex(index);
+        return index;
+      }
+      return null;
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  function clearScrollIndex() {
+    if (scrollToIndex !== null) {
+      // @ts-ignore
+      setScrollIndex(null);
+    }
   }
 
-  function clearScrollToIndex() {
-    setScrollIndex(-1);
-  }
-
-  function handleClick() {
-    setScrollIndex(20);
-  }
   return (
-    <ul
-      style={{
-        position: "relative",
-        margin: 0,
-        padding: 0
-      }}
-    >
-      <InfiniteLoader
-        isRowLoaded={isRowLoaded}
-        loadMoreRows={loadMoreRows => handleloadMoreRows(loadMoreRows)}
-        rowCount={arr.length}
-        threshold={15}
-      >
-        {({ onRowsRendered, registerChild }) => (
-          <WindowScroller onScroll={clearScrollToIndex}>
-            {({ height, isScrolling, onChildScroll, scrollTop }) => (
-              <div>
-                <AutoSizer>
-                  {({ width }) => {
-                    console.log("scroll to index", scrollToIndex);
-                    return (
-                      <List
-                        width={width}
-                        autoHeight
-                        rowCount={arr.length}
-                        rowHeight={680}
-                        height={height}
-                        onRowsRendered={onRowsRendered}
-                        // @ts-ignore
-                        rowRenderer={e => {
-                          return rowRenderer({ ...e, isScrolling });
-                        }}
-                        scrollTop={scrollTop}
-                        style={{ paddingLeft: "0", paddingRight: "0" }}
-                        // scrollToAlignment="start"
-                        scrollToIndex={scrollToIndex}
-                        onScroll={onChildScroll}
-                      ></List>
-                    );
-                  }}
-                </AutoSizer>
-              </div>
-            )}
-          </WindowScroller>
-        )}
-      </InfiniteLoader>
-      <button
+    <React.Fragment>
+      <ul
         style={{
           position: "relative",
-          zIndex: 20
-        }}
-        onClick={() => {
-          //@ts-ignore
-          handleClick()
+          margin: 0,
+          padding: 0
         }}
       >
-        click
-      </button>
-    </ul>
+        <button
+          className={styles.goToday}
+          onClick={() => {
+            setScrollIndex(todayIndex);
+          }}
+        >
+          NOW
+        </button>
+        <VirtualList
+          width="100%"
+          height={window.innerHeight}
+          itemCount={arr.length}
+          itemSize={1050} // Also supports variable heights (array or function getter)
+          renderItem={({ index, style }) => (
+            <div key={index} style={style}>
+              <p className={styles.monthName}>
+                {arr[index].name} {arr[index].year}
+              </p>
+              <Month month={arr[index].days}></Month>
+            </div>
+          )}
+          scrollToIndex={scrollToIndex}
+          onScroll={clearScrollIndex}
+        />
+      </ul>
+    </React.Fragment>
   );
 };
 
@@ -140,15 +82,9 @@ interface CalendarProps {
 }
 
 const Calendar = () => {
-  // const arr: Array<CalendarProps> = data;
-  const [calendar, setCalendar] = React.useState(getCalendar(null));
-  const [arr, setArr] = React.useState([]);
-
-  React.useEffect(() => {}, [calendar]);
-
   return (
-    <div>
-      <MonthsList months={calendar} />
+    <div className={styles.wrap}>
+      <MonthsList months={getCalendar(null)} />
     </div>
   );
 };

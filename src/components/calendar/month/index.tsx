@@ -1,10 +1,7 @@
 import React from "react";
-import VirtualList from "react-tiny-virtual-list";
+import moment from "moment";
 import Day from "./day";
-import "./styles.scss";
-
-// let DateRange = new FormatDate();
-// const days = Array.from(Array(31).keys());
+import styles from "./styles.module.scss";
 
 interface MonthProps {
   month?: any;
@@ -14,11 +11,17 @@ const Month = (props: MonthProps) => {
   const { month } = props;
 
   return (
-    <div className="month">
+    <ul className={styles.month}>
       {month.map((el: any, index: number) => {
-        return <Day key={`${el}_${index}`}>{el ? el.date() : ""}</Day>;
+        return (
+          <li className={styles.item} key={`${el}_${index}`}>
+            <Day isToday={el && el.isSame(moment(), "day")}>
+              {el ? el.date() : ""}
+            </Day>
+          </li>
+        );
       })}
-    </div>
+    </ul>
   );
 };
 
