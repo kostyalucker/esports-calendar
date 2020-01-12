@@ -2,16 +2,14 @@
   box-sizing: border-box;
   position: relative;
   padding: 50px 20px;
-  // background-color: #ffffff;
-  // border-top: .5px solid var(--color-primary);
-  // background: linear-gradient(rgba($color: var(--color-primary), $alpha: .2), rgba($color: var(--color-primary), $alpha: .1));
-  box-shadow: 0px 0px 10px 3px var(--color-primary);
+  border: 2px solid var(--color-primary);
+  font-weight: bold;
   &.isEmpty {
     border-width: 0;
     box-shadow: none;
     background: transparent;
   }
   &.isToday {
-    background: var(--color-primary);
+    background: rgba($color: red, $alpha: .4);
   }
 }
