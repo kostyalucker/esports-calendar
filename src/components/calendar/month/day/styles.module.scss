@@ -1,28 +1,17 @@
-@import "~assets/styles/mixins.scss";
-
 .day {
   box-sizing: border-box;
   position: relative;
   padding: 50px 20px;
-  box-shadow: inset 5px 9px 17px -11px #f1f1f1;
-  background-color: #fff;
-  &:last-child {
-    border-right: 0.5px solid;
+  // background-color: #ffffff;
+  // border-top: .5px solid var(--color-primary);
+  // background: linear-gradient(rgba($color: var(--color-primary), $alpha: .2), rgba($color: var(--color-primary), $alpha: .1));
+  box-shadow: 0px 0px 10px 3px var(--color-primary);
+  &.isEmpty {
+    border-width: 0;
+    box-shadow: none;
+    background: transparent;
   }
-
-  @include xl {
-    flex: 0 0 14.28%;
-  }
-  @include lg {
-    flex: 0 0 25%;
-  }
-  @include md {
-    flex: 0 0 33.33%;
-  }
-  @include sm {
-    flex: 0 0 50%;
-  }
-  @include xs {
-    flex: 0 0 100%;
+  &.isToday {
+    background: var(--color-primary);
   }
 }

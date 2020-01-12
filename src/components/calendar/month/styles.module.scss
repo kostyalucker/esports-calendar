@@ -1,0 +1,29 @@
+@import "~assets/styles/mixins.scss";
+
+.month {
+  display: flex;
+  flex-flow: row wrap;
+  list-style: none;
+  padding: 0 2rem;
+  margin: 0 -20px;
+}
+
+.item {
+  padding: 20px;
+  box-sizing: border-box;
+  @include xl {
+    flex: 0 0 14.28%;
+  }
+  @include lg {
+    flex: 0 0 25%;
+  }
+  @include md {
+    flex: 0 0 33.33%;
+  }
+  @include sm {
+    flex: 0 0 50%;
+  }
+  @include xs {
+    flex: 0 0 100%;
+  }
+}
