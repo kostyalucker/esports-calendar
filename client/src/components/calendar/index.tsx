@@ -5,9 +5,10 @@ import Month from "./month"
 import { getCalendar } from "../../utils"
 import styles from "./styles.module.scss"
 
-interface PropsRow {
-    key?: any
-    index?: number
+const rowSizes = {
+    xs: 1100,
+    md: 1500,
+    lg: 1700
 }
 
 const MonthsList = (props: any) => {
@@ -21,11 +22,18 @@ const MonthsList = (props: any) => {
     })
 
     React.useEffect(() => {
-        fetch('http://localhost:5000/api/events', {
-            method: 'GET'
-        }).then(res => {
-            console.log(res)
-        })
+        if (!localStorage.getItem("events")) {
+            fetch("http://localhost:5000/api/events", {
+                method: "GET"
+            })
+                .then(res => {
+                    return res.json()
+                })
+                .then(json => {
+                    // @ts-ignore
+                    localStorage.setItem("events", JSON.stringify(json))
+                })
+        }
         arr.find((el: any, index: number) => {
             if (el.isToday) {
                 setScrollIndex(index)
@@ -67,20 +75,24 @@ const MonthsList = (props: any) => {
                     itemCount={arr.length}
                     itemSize={index => {
                         if (arr[index].days.length > 35) {
-                            return 1100
+                            return rowSizes.lg
                         } else if (arr[index].days.length === 35) {
-                            return 1020
+                            return rowSizes.md
                         } else if (arr[index].days.length < 35) {
-                            return 900
+                            return rowSizes.xs
                         }
                         return 0
                     }} // Also supports variable heights (array or function getter)
                     renderItem={({ index, style }) => (
-                        <div key={index} style={style} className={styles.renderItem}>
+                        <div
+                            key={index}
+                            style={style}
+                            className={styles.renderItem}
+                        >
                             <p className={styles.monthName}>
                                 {arr[index].name} {arr[index].year}
                             </p>
-                            <Month month={arr[index].days}></Month>
+                            <Month month={arr[index].days} />
                         </div>
                     )}
                     scrollToIndex={scrollToIndex}
@@ -96,9 +108,11 @@ interface CalendarProps {
 }
 
 const Calendar = () => {
+    const data: any = localStorage.getItem("events")
+
     return (
         <div className={styles.wrap}>
-            <MonthsList months={getCalendar(null)} />
+            <MonthsList months={getCalendar(null, JSON.parse(data).events)} />
         </div>
     )
 }

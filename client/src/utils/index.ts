@@ -1,53 +1,72 @@
-import moment from 'moment';
+import moment from "moment"
 
-const MONTHS_OFFSET = 96;
+const MONTHS_OFFSET = 96
 
-const getMonthDays = (date: any) => {
-  const startDate = date
-  .clone()
-  .startOf('month')
-  .startOf('isoWeek');
-  const endDay = date
-  .clone()
-  .endOf('month')
-  .endOf('isoWeek');
-  
-  const days = [];
-  const now = startDate.clone();
-  
-  while (now.isSameOrBefore(endDay)) {
-    const res = now.month() === date.month() ? now.clone() : null;
-    
-    now.add(1, 'day');
-    days.push(res);
-  }
-  return days;
-};
+const getMonthDays = (date: any, events: any) => {
+    const startDate = date
+        .clone()
+        .startOf("month")
+        .startOf("isoWeek")
+    const endDay = date
+        .clone()
+        .endOf("month")
+        .endOf("isoWeek")
 
-export const CALENDAR_START_DATE = moment().subtract(MONTHS_OFFSET, 'months');
+    const days = []
+    const now = startDate.clone()
 
-export const getCalendar = (date: any) => {
-  let start;
-  const result: any = {};
+    while (now.isSameOrBefore(endDay)) {
+        const res = now.month() === date.month() ? now.clone() : null
+        const dayData: any = {
+            date: res
+        }
+        events.forEach((el: any, idx: number) => {
+            if (
+                moment(events[idx].date)
+                    .startOf("day")
+                    .isSame(now.startOf("day"))
+            ) {
+                console.log(el)
+                dayData.events = el
+            }
+        })
+        now.add(1, "day")
+        days.push(dayData)
+    }
+    return days
+}
 
-  start = date || CALENDAR_START_DATE;
+export const CALENDAR_START_DATE = moment().subtract(MONTHS_OFFSET, "months")
 
-  const startClone = start.clone();
-  const endDate = moment().clone().add(MONTHS_OFFSET, 'months');
-  let i = 0;
+export const getCalendar = (date: any, events: any) => {
+    let start
+    const result: any = {}
+    const eventsArr = Object.keys(events).map(el => {
+        return events[el]
+    })
 
-  while (startClone.isBefore(endDate)) {
-    i += 1;
+    start = date || CALENDAR_START_DATE
 
-    result[i] = {
-      isToday: moment().isSame(startClone, 'month') && moment().isSame(startClone, 'year'),
-      name: startClone.format('MMMM'),
-      year: startClone.format('YYYY'),
-      days: getMonthDays(startClone),
-    };
+    const startClone = start.clone()
+    const endDate = moment()
+        .clone()
+        .add(MONTHS_OFFSET, "months")
+    let i = 0
 
-    startClone.add(1, 'month');
-  }
+    while (startClone.isBefore(endDate)) {
+        i += 1
 
-  return result;
-};
+        result[i] = {
+            isToday:
+                moment().isSame(startClone, "month") &&
+                moment().isSame(startClone, "year"),
+            name: startClone.format("MMMM"),
+            year: startClone.format("YYYY"),
+            days: getMonthDays(startClone, eventsArr)
+        }
+
+        startClone.add(1, "month")
+    }
+
+    return result
+}

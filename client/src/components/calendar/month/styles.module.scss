@@ -5,11 +5,18 @@
     flex-flow: row wrap;
     list-style: none;
     padding: 0 2rem;
-    margin: 0 -20px;
+    // margin: 0 -5px;
+    &.head {
+        margin-bottom: 1rem;
+        .item {
+            min-height: auto;
+        }
+    }
 }
 
 .item {
-    padding: 20px;
+    min-height: 230px;
+    padding: 0 5px;
     @include xl {
         flex: 0 0 14.28%;
     }
@@ -24,5 +31,8 @@
     }
     @include xs {
         flex: 0 0 100%;
+    }
+    &.isToday {
+        background: rgba($color: red, $alpha: 0.4);
     }
 }
