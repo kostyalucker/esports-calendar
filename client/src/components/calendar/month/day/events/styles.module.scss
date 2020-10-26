@@ -1,0 +1,32 @@
+.wrap {
+    font-size: 14px;
+}
+
+.list {
+}
+
+.item {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    margin-bottom: 0.5rem;
+    padding: 5px 0;
+    .name {
+        margin-right: 3px;
+        text-align: right;
+        color: var(--color-secondary);
+    }
+}
+
+.controls {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.addButton,
+.moreButton {
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: #fff;
+}

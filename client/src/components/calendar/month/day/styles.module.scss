@@ -1,0 +1,21 @@
+.dayWrap {
+    position: relative;
+    padding: 10px 10px 20px;
+    border-top: 2px solid var(--color-primary);
+    font-weight: bold;
+
+    &.isEmpty {
+        border-width: 0;
+        box-shadow: none;
+        background: transparent;
+    }
+    &.isToday {
+        background: rgba($color: #3dcca8, $alpha: 0.4);
+    }
+}
+
+.dayNumber {
+    padding: 10px;
+    font-size: 24px;
+    text-align: left;
+}
